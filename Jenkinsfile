@@ -17,7 +17,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/SakariHonkavaara/week7_calculator_fx_db.git',
+                git url: 'https://github.com/Sakarihon/week7_calculator_fx_db.git',
                     credentialsId: 'githubtoken',
                     branch: 'main'
             }
