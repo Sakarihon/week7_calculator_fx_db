@@ -25,33 +25,23 @@ pipeline {
 
         stage('Build') {
             steps {
-                bat 'mvn clean package'
+                bat 'mvn clean package -DskipTests'
             }
         }
 
         stage('Docker Build') {
             steps {
-                script {
-                    docker.build("${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}")
-                }
-            }
-        }
-
-        stage('Run Docker') {
-            steps {
-                bat 'docker-compose up -d'
+                bat "docker build -t ${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG} ."
             }
         }
 
         stage('Push Docker Image') {
-            when {
-                expression { return true }
-            }
             steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKERHUB_CREDENTIALS_ID) {
-                        docker.image("${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}").push()
-                    }
+                withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    bat """
+                        docker login -u %DOCKER_USER% -p %DOCKER_PASS%
+                        docker push ${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}
+                    """
                 }
             }
         }
