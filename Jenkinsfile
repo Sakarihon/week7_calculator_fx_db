@@ -17,7 +17,9 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git 'https://github.com/SakariHonkavaara/week7_calculator_fx_db.git'
+                git url: 'https://github.com/SakariHonkavaara/week7_calculator_fx_db.git',
+                    credentialsId: 'GitHubToken',
+                    branch: 'main'
             }
         }
 
@@ -41,7 +43,6 @@ pipeline {
             }
         }
 
-        // Optional: push Docker image to Docker Hub
         stage('Push Docker Image') {
             when {
                 expression { return true }
