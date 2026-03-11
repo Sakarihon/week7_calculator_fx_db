@@ -1,4 +1,3 @@
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -17,10 +16,23 @@ public class CalculatorController {
 
             double sum = num1 + num2;
             double product = num1 * num2;
+            double subtract = num1 - num2;
 
-            resultLabel.setText("Sum: " + sum + ", Product: " + product);
+            double divide;
+            if (num2 != 0) {
+                divide = num1 / num2;
+            } else {
+                resultLabel.setText("Cannot divide by zero!");
+                return;
+            }
 
-            // Save to DB
+            resultLabel.setText(
+                    "Sum: " + sum +
+                            ", Product: " + product +
+                            ", Subtract: " + subtract +
+                            ", Divide: " + divide
+            );
+
             ResultService.saveResult(num1, num2, sum, product);
 
         } catch (NumberFormatException e) {
